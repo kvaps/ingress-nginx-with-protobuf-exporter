@@ -1,6 +1,6 @@
 ARG TAG
 
-FROM golang:1.23-alpine as builder
+FROM golang:1.24-alpine as builder
 ARG TAG=$TAG
 RUN apk add --no-cache git make bash
 RUN git clone --branch controller-${TAG} --depth 1 https://github.com/kubernetes/ingress-nginx /src
