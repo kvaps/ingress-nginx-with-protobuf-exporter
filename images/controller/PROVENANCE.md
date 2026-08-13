@@ -16,3 +16,7 @@ The template needed no edit at all. On 1.11.2 the `| quote` hardening of `Certif
 `11843.diff` is vendored rather than fetched at build time. The upstream pull request is still open, so a `wget` of its `.diff` would let the build change under us without any commit here; the controller is built with `enable-ssl-passthrough`, which is exactly what that patch fixes for fragmented ClientHello.
 
 The builder image is `golang:1.24-alpine`: 1.11.5 declares `go 1.24.1` in its `go.mod`, where 1.11.2 declared `go 1.22.6`.
+
+## Regenerating the vendored template
+
+`make update` refreshes the deckhouse inputs — the Lua modules and `patches/nginx-tmpl.patch` — but it does not produce `etc/nginx/template/nginx.tmpl`; that file is vendored by hand, as it was on `build-v1.11.2`. To rebuild it for a new upstream version, take that version's `rootfs/etc/nginx/template/nginx.tmpl`, apply `patches/nginx-tmpl.patch`, and then delete the three HTTP3 blocks it introduces (two `buildHTTP3Listener` calls and the `Alt-Svc` header). The deletion is required, not optional — see the note on HTTP3 above.

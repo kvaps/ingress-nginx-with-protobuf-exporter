@@ -1,4 +1,4 @@
-FROM golang:alpine3.16 as artifact
+FROM golang:1.24-alpine as artifact
 WORKDIR /src/
 COPY / /src/
 RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags='-extldflags "-static" -s -w' -o ./protobuf_exporter ./main.go
