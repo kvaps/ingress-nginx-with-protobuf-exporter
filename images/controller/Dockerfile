@@ -15,8 +15,9 @@ FROM registry.k8s.io/ingress-nginx/controller:$TAG
 
 USER root
 
-# required packages to build lua and run luarocks
-RUN apk add --no-cache make gcc musl-dev
+# required packages to build lua and run luarocks. git is needed because the
+# rockspecs below fetch their sources from git rather than a source tarball.
+RUN apk add --no-cache make gcc musl-dev git
 
 ARG LUA_ROCKS_VER="3.0.0"
 RUN cd /tmp \
@@ -29,8 +30,8 @@ RUN cd /tmp \
  && cd /tmp \
  && rm -rf /tmp/* \
  && mkdir -p /tmp/nginx && chown www-data: /tmp/nginx \
- && luarocks install lua-protobuf 0.4.1-1 \
- && luarocks install lua-iconv 7-3
+ && luarocks install https://luarocks.org/manifests/xavier-wang/lua-protobuf-0.4.1-1.rockspec \
+ && luarocks install https://luarocks.org/manifests/lunarmodules/lua-iconv-7.1.0-1.rockspec
 
 USER www-data
 
